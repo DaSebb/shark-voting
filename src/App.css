@@ -222,16 +222,18 @@
 
 @media (max-width: 480px) {
   .hero-img {
-    max-width: 120px;
+    max-width: 250px;
   }
 
   .counter {
-    font-size: 12px;
+    font-size: 13px;
+    max-width: 100px;
     padding: 4px 8px;
   }
 
   h1 {
-    font-size: 1.2rem;
-    margin: 8px 0;
+    font-size: 1.5rem;
+    margin: 10px 0;
+    margin-top: 140px;
   }
 }
