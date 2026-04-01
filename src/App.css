@@ -219,3 +219,19 @@
   height: auto;
   border-radius: 8px;
 }
+
+@media (max-width: 480px) {
+  .hero-img {
+    max-width: 120px;
+  }
+
+  .counter {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+    margin: 8px 0;
+  }
+}
