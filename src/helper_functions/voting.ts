@@ -18,7 +18,7 @@ export async function getVotes() {
 }
 
 export async function vote(userId: string, vote: Candidate) {
-    const response = await fetch(`${API_URL}/votes`, {
+    const response = await fetch(`${API_URL}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, vote })
