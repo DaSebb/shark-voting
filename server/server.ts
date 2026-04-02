@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import type { Candidate } from './models/types.js'
+import type { Candidate } from '../shared/types.js'
 import { isCandidate } from './utils/server_helpers.js'
 
 
