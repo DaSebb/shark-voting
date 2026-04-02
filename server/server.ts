@@ -1,32 +1,36 @@
 import express from 'express'
 import cors from 'cors'
+import type { Candidate } from './models/types.js'
+import { isCandidate } from './utils/server_helpers.js'
+
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
 // In-memory storage (resets when server restarts)
-let votes = {
+const votes: Record<Candidate, number> = {
     sharky: 0,
     alex: 0
 }
 
-let userVotes =
+const userVotes = new Map<string, Candidate>()
 
-    // Get current votes
-    app.get('/votes', (req, res) => {
-        res.json(votes)
-    })
+// Get current votes
+app.get('/votes', (req, res) => {
+    res.json(votes)
+})
 
 // Vote endpoint
 app.post('/vote', (req, res) => {
     const { userId, vote } = req.body
 
-    const previousVote = userVotes[userId]
-
-    if (!Object.hasOwn(votes, vote)) {
+    if (!isCandidate(vote)) {
         return res.status(400).json({ error: 'Ungültiger Vote' })
     }
+
+    const previousVote = userVotes.get(userId)
+
 
     // Remove previous vote
     if (previousVote !== undefined) {
@@ -34,8 +38,8 @@ app.post('/vote', (req, res) => {
     }
 
     // Add new vote
-    votes[vote]++
-    userVotes[userId] = vote
+    votes[vote as Candidate]++
+    userVotes.set(userId, vote as Candidate)
 
     res.json(votes)
 })
