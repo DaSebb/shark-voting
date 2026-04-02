@@ -193,7 +193,7 @@
   border-radius: 4px;
   color: var(--text-h);
   background-color: #aa3bff;
-  border: 1px solid #ccc;
+  border: 1px solid white;
   cursor: pointer;
   width: auto;
   max-width: 150px;
@@ -218,6 +218,7 @@
   width: 500px;
   height: auto;
   border-radius: 8px;
+  border: 2px solid white;
 }
 
 @media (max-width: 480px) {
