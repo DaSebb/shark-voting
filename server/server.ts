@@ -8,7 +8,9 @@ import 'dotenv/config'
 const PORT = process.env.PORT ?? 3000
 
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: 'https://dasebb.github.io'
+}))
 app.use(express.json())
 
 // In-memory storage (resets when server restarts)
