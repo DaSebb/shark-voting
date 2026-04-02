@@ -2,7 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import type { Candidate } from '../shared/types.js'
 import { isCandidate } from './utils/server_helpers.js'
+import 'dotenv/config'
 
+
+const PORT = process.env.PORT ?? 3000
 
 const app = express()
 app.use(cors())
@@ -44,8 +47,8 @@ app.post('/vote', (req, res) => {
     res.json(votes)
 })
 
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000')
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`)
 })
 
 app.get('/', (req, res) => {

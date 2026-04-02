@@ -1,5 +1,7 @@
 import type { Candidate } from "../../shared/types.js"
 
+const API_URL = import.meta.env.VITE_API_URL
+
 export function getUserId() {
     let id = localStorage.getItem('userId')
     if (!id) {
@@ -10,13 +12,13 @@ export function getUserId() {
 }
 
 export async function getVotes() {
-    const res = await fetch('http://localhost:3000/votes')
+    const res = await fetch(`${API_URL}/votes`)
     const data = await res.json()
     return data
 }
 
 export async function vote(userId: string, vote: Candidate) {
-    const response = await fetch('http://localhost:3000/vote', {
+    const response = await fetch(`${API_URL}/votes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, vote })
