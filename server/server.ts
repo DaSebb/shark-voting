@@ -3,6 +3,7 @@ import cors from 'cors'
 import type { Candidate } from '../shared/types.js'
 import { isCandidate } from './utils/server_helpers.js'
 import 'dotenv/config'
+import { supabase } from './supabase.js'
 
 
 const PORT = process.env.PORT ?? 3000
@@ -13,38 +14,42 @@ app.use(cors({
 }))
 app.use(express.json())
 
-// In-memory storage (resets when server restarts)
-const votes: Record<Candidate, number> = {
-    sharky: 0,
-    alex: 0
-}
-
-const userVotes = new Map<string, Candidate>()
 
 // Get current votes
-app.get('/votes', (req, res) => {
-    res.json(votes)
+app.get('/votes', async (req, res) => {
+    const { data } = await supabase
+        .from('votes')
+        .select('*')
 })
 
 // Vote endpoint
-app.post('/vote', (req, res) => {
+app.post('/vote', async (req, res) => {
     const { userId, vote } = req.body
 
     if (!isCandidate(vote)) {
         return res.status(400).json({ error: 'Ungültiger Vote' })
     }
 
-    const previousVote = userVotes.get(userId)
+    const { data: previousVoteData } = await supabase
+        .from('user_votes')
+        .select('candidate')
+        .eq('user_id', userId)
+        .single()
 
+    const previousVote = previousVoteData?.candidate as Candidate | undefined
 
-    // Remove previous vote
     if (previousVote !== undefined) {
-        votes[previousVote]--
+        await supabase.rpc('decrement_vote', { candidate_name: previousVote })
     }
 
-    // Add new vote
-    votes[vote as Candidate]++
-    userVotes.set(userId, vote as Candidate)
+    await supabase.rpc('increment_vote', { candidate_name: vote })
+
+    await supabase
+        .from('user_votes')
+        .upsert({ user_id: userId, candidate: vote })
+
+    const { data } = await supabase.from('votes').select('*')
+    const votes = Object.fromEntries(data!.map(row => [row.candidate, row.count]))
 
     res.json(votes)
 })
