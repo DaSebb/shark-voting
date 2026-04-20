@@ -21,3 +21,9 @@ If you are developing a production application, we recommend using TypeScript wi
 - run front-end: npm run dev
 
 - create .env just as in .env-sample with own values
+
+
+## Facts
+- depolyed on render
+- database on supabase
+- cron-job pings server and database so it doesn't sleep
