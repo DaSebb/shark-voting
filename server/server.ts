@@ -20,6 +20,9 @@ app.get('/votes', async (req, res) => {
     const { data } = await supabase
         .from('votes')
         .select('*')
+
+    const votes = Object.fromEntries(data!.map(row => [row.candidate, row.count]))
+    res.json(votes)
 })
 
 // Vote endpoint
