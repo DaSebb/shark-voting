@@ -30,27 +30,13 @@ app.post('/vote', async (req, res) => {
         return res.status(400).json({ error: 'Ungültiger Vote' })
     }
 
-    const { data: previousVoteData } = await supabase
-        .from('user_votes')
-        .select('candidate')
-        .eq('user_id', userId)
-        .single()
-
-    const previousVote = previousVoteData?.candidate as Candidate | undefined
-
-    if (previousVote !== undefined) {
-        await supabase.rpc('decrement_vote', { candidate_name: previousVote })
-    }
-
-    await supabase.rpc('increment_vote', { candidate_name: vote })
-
-    await supabase
-        .from('user_votes')
-        .upsert({ user_id: userId, candidate: vote })
+    await supabase.rpc('cast_vote', {
+        p_user_id: userId,
+        p_candidate: vote
+    })
 
     const { data } = await supabase.from('votes').select('*')
     const votes = Object.fromEntries(data!.map(row => [row.candidate, row.count]))
-
     res.json(votes)
 })
 
